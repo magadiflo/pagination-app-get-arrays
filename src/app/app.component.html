@@ -1,5 +1,4 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    {{ userState$ | async | json }}
     <div class="container">
         <a class="navbar-brand" href="#">Navbar</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -22,6 +21,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12 mt-3">
+            <pre>{{ userState$ | async | json }}</pre>
             <h3>User List</h3>
             <table class="table table-striped">
                 <thead>
