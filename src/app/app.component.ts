@@ -4,6 +4,8 @@ import { Observable, map, startWith, catchError, of } from 'rxjs';
 
 import { ApiResponse } from './interface/api-response.interface';
 import { Page } from './interface/page.interface';
+import { Status } from './interface/user.interface';
+
 import { UserService } from './service/user.service';
 
 @Component({
@@ -38,6 +40,19 @@ export class AppComponent implements OnInit {
         startWith({ appState: 'APP_LOADING' }),
         catchError((error: HttpErrorResponse) => of({ appState: 'APP_ERROR', error }))
       );
+  }
+
+  getStatusClass(status: string): string {
+    switch (status) {
+      case Status.active:
+        return 'text-bg-success';
+      case Status.pending:
+        return 'text-bg-warning';
+      case Status.banned:
+        return 'text-bg-danger';
+      default:
+        return '';
+    }
   }
 
 }
