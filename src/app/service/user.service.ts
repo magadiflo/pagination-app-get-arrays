@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { APIResponse } from '../interface/api-response.interface';
+import { ApiResponse } from '../interface/api-response.interface';
 import { Page } from '../interface/page.interface';
 
 @Injectable({
@@ -16,12 +16,12 @@ export class UserService {
 
   //* Make call to the back end  API to retrieve page of users
   //* 1° Enfoque en cómo llamar al backend
-  users$ = (name: string = '', page: number = 0, size: number = 10): Observable<APIResponse<Page>> =>
-    this.http.get<APIResponse<Page>>(`${this.serverUrl}/v0/api/users?name=${name}&page=${page}&size=${size}`);
+  users$ = (name: string = '', page: number = 0, size: number = 10): Observable<ApiResponse<Page>> =>
+    this.http.get<ApiResponse<Page>>(`${this.serverUrl}/v0/api/users?name=${name}&page=${page}&size=${size}`);
 
   //* 2° Enfoque en cómo llamar al backend
-  getUsers(name: string = '', page: number = 0, size: number = 10): Observable<APIResponse<Page>> {
-    return this.http.get<APIResponse<Page>>(`${this.serverUrl}/v0/api/users?name=${name}&page=${page}&size=${size}`);
+  getUsers(name: string = '', page: number = 0, size: number = 10): Observable<ApiResponse<Page>> {
+    return this.http.get<ApiResponse<Page>>(`${this.serverUrl}/v0/api/users?name=${name}&page=${page}&size=${size}`);
   }
 
   /**
