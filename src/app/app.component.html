@@ -74,7 +74,7 @@
                             </li>
                             <!-- [].constructor(state.appData!.data.page.totalPages), únicamente define un arreglo del tamaño del número de totalPages que vengan -->
                             <li *ngFor="let pageNumber of [].constructor(state.appData!.data.page.totalPages); let i = index;" class="page-item">
-                                <a class="page-link" href="#">{{ i + 1 }}</a>
+                                <a class="page-link" (click)="goToPage('', i)">{{ i + 1 }}</a>
                             </li>
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="Next">
