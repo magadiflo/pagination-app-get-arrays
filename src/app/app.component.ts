@@ -17,6 +17,8 @@ export class AppComponent implements OnInit {
 
   userState$!: Observable<{ appState: string, appData?: ApiResponse<Page>, error?: HttpErrorResponse }>;
   responseSubject!: BehaviorSubject<ApiResponse<Page>>;
+  private currentPageSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  currentPage$: Observable<number> = this.currentPageSubject.asObservable();
 
   constructor(private userService: UserService) { }
 
@@ -49,6 +51,7 @@ export class AppComponent implements OnInit {
         map((response: ApiResponse<Page>) => {
           //* Estos datos almacenados temporalmente lo mostraremos la primera vez que se llame al método goToPage, en el startWith
           this.responseSubject = new BehaviorSubject<ApiResponse<Page>>(response);
+          this.currentPageSubject.next(response.data.page.number); //*Aquí estamos volviendo a configurar la página inicial en cero
           console.log(response);
           return { appState: 'APP_LOADED', appData: response };
         }),
@@ -67,13 +70,18 @@ export class AppComponent implements OnInit {
           //* Es decir si estamos por ejemplo en la pág. 3 y queremos ir a la 4, en el startWith mostrará los datos de la página 3. 
           //* Si no colocamos esta línea de .next(), lo que hará será mostrar la página 0, que es lo que guardamos 
           //* en el ngOnInit al instanciar el BehaviorSubject pasándole como valor inicial el response
-          this.responseSubject.next(response); 
+          this.responseSubject.next(response);
+          this.currentPageSubject.next(pageNumber!); //* Podríamos pasarle como en el ngOnInit:  response.data.page.number, es lo mismo
           console.log(response);
           return { appState: 'APP_LOADED', appData: response };
         }),
         startWith({ appState: 'APP_LOADED', appData: this.responseSubject.value }),
         catchError((error: HttpErrorResponse) => of({ appState: 'APP_ERROR', error }))
       );
+  }
+
+  goToNextOrPreviousPage(direction?: string, name?: string): void {
+    this.goToPage(name, direction === 'forward' ? this.currentPageSubject.value + 1 : this.currentPageSubject.value - 1);
   }
 
   getStatusClass(status: string): string {
