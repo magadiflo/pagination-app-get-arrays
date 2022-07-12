@@ -62,7 +62,7 @@ export class AppComponent implements OnInit {
 
   //* A este punto la aplicación ya ha sido cargada, por eso es que iniciamos en el startWith  con APP_LOADED
   //* Si lo dejamos con APP_LOADING se mostrará el spinner y desaparecerán los registros, no queremos que eso suceda
-  goToPage(name?: string, pageNumber?: number): void {
+  goToPage(name?: string, pageNumber: number = 0): void {
     this.userState$ = this.userService.users$(name, pageNumber)
       .pipe(
         map((response: ApiResponse<Page>) => {

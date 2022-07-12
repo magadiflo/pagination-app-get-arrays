@@ -13,8 +13,8 @@
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
                 </ul>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search users" aria-label="Search">
+                <form #searchForm="ngForm" (ngSubmit)="goToPage(searchForm.value.nameToSearch.trim())" class="d-flex" role="search">
+                    <input type="search" name="nameToSearch" ngModel class="form-control me-2" placeholder="Search users" aria-label="Search">
                     <button class="btn btn-success" type="submit">Search</button>
                 </form>
             </div>
@@ -38,52 +38,57 @@
                 </ng-container>
                 <ng-container *ngSwitchCase="'APP_LOADED'">
                     <h3>User List</h3>
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">Photo</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Phone</th>
-                                <th scope="col">Status</th>
-                                <th scope="col">Address</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let user of state.appData!.data.page.content">
-                                <th scope="row">{{ user.id }}</th>
-                                <td><img [src]="user.imageUrl" alt="{{ user.name }}'s photo" class="rounded-circle img-small"></td>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.phone }}</td>
-                                <td>
-                                    <span class="badge " [ngClass]="getStatusClass(user.status)">{{ user.status }}</span>
-                                </td>
-                                <td>{{ user.address }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-end">
-                            <li [ngClass]="0 == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
-                                <a (click)="$event.preventDefault(); goToNextOrPreviousPage('backward', '')" href="#" class="page-link" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                            <!-- [].constructor(state.appData!.data.page.totalPages), únicamente define un arreglo del tamaño del número de totalPages que vengan -->
-                            <li *ngFor="let pageNumber of [].constructor(state.appData!.data.page.totalPages); let i = index;" 
-                                [ngClass]="i == (currentPage$ | async) ? 'active' : ''" class="page-item">
-                                <a class="page-link" (click)="$event.preventDefault(); goToPage('', i)" href="#">{{ i + 1 }}</a>
-                            </li>
-                            <li [ngClass]="(state.appData!.data.page.totalPages - 1) == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
-                                <a (click)="$event.preventDefault(); goToNextOrPreviousPage('forward', '');" href="#" class="page-link" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <ng-container *ngIf="state.appData!.data.page.content.length > 0; else showAlert">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Photo</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Phone</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Address</th>
+    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let user of state.appData!.data.page.content">
+                                    <th scope="row">{{ user.id }}</th>
+                                    <td><img [src]="user.imageUrl" alt="{{ user.name }}'s photo" class="rounded-circle img-small"></td>
+                                    <td>{{ user.name }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.phone }}</td>
+                                    <td>
+                                        <span class="badge " [ngClass]="getStatusClass(user.status)">{{ user.status }}</span>
+                                    </td>
+                                    <td>{{ user.address }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-end">
+                                <li [ngClass]="0 == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
+                                    <a (click)="$event.preventDefault(); goToNextOrPreviousPage('backward', searchForm.value.nameToSearch.trim())" href="#" class="page-link" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                <!-- [].constructor(state.appData!.data.page.totalPages), únicamente define un arreglo del tamaño del número de totalPages que vengan -->
+                                <li *ngFor="let pageNumber of [].constructor(state.appData!.data.page.totalPages); let i = index;" 
+                                    [ngClass]="i == (currentPage$ | async) ? 'active' : ''" class="page-item">
+                                    <a class="page-link" (click)="$event.preventDefault(); goToPage(searchForm.value.nameToSearch.trim(), i)" href="#">{{ i + 1 }}</a>
+                                </li>
+                                <li [ngClass]="(state.appData!.data.page.totalPages - 1) == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
+                                    <a (click)="$event.preventDefault(); goToNextOrPreviousPage('forward', searchForm.value.nameToSearch.trim());" href="#" class="page-link" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </ng-container>
+                    <ng-template #showAlert>
+                        <div class="alert alert-secondary" role="alert">¡No users found!</div>
+                    </ng-template>                    
                 </ng-container>
             </div>
         </div>
