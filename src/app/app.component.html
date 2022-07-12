@@ -73,7 +73,8 @@
                                 </a>
                             </li>
                             <!-- [].constructor(state.appData!.data.page.totalPages), únicamente define un arreglo del tamaño del número de totalPages que vengan -->
-                            <li *ngFor="let pageNumber of [].constructor(state.appData!.data.page.totalPages); let i = index;" class="page-item">
+                            <li *ngFor="let pageNumber of [].constructor(state.appData!.data.page.totalPages); let i = index;" 
+                                [ngClass]="i == (currentPage$ | async) ? 'active' : ''" class="page-item">
                                 <a class="page-link" (click)="$event.preventDefault(); goToPage('', i)" href="#">{{ i + 1 }}</a>
                             </li>
                             <li [ngClass]="(state.appData!.data.page.totalPages - 1) == (currentPage$ | async) ? 'disabled' : ''" class="page-item">
