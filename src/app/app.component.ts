@@ -17,6 +17,26 @@ export class AppComponent implements OnInit {
 
   userState$!: Observable<{ appState: string, appData?: ApiResponse<Page>, error?: HttpErrorResponse }>;
   responseSubject!: BehaviorSubject<ApiResponse<Page>>;
+
+  /***
+   * * Explicación tomado de otra página (es similar a por qué están declarados estos dos atributos de esa forma)
+   * * **********************************************************************************************************
+   * * BehaviorSubject al igual que cualquier otro Subject es tanto un Observable como un Observador. Llevándolo a concreto, 
+   * * significa que te puedes suscribir al igual que con un Observable normal pero además expone los métodos next, error y complete, 
+   * * y los puedes llamar de forma imperativa en cualquier parte de tu código. Al llamar a cualquiera de estos métodos, 
+   * * todo suscriptor que esté suscrito al Subject va a ser notificado.
+   * * **** ¿Por qué hacerlo privado? 
+   * * Porque así impides que cualquier componente al que le hayas inyectado el servicio interactúe directamente con el Subject 
+   * * y envíe mensajes por otro medio que no sea la API pública que define tu servicio.
+   * * Y pues como has privatizado el Subject, necesitas una forma de que tus componentes se puedan suscribir a los eventos que emite. 
+   * * Lo que hace asObservable() en definitiva es crear un nuevo Observable y por lo mismo ya no tienes acceso 
+   * * a llamar imperativamente next, error y complete, por lo que efectivamente restringes toda interacción indeseada 
+   * * que puedan tener los componentes con tu servicio.
+   * 
+   * * El signo $ es convención para declarar un observable, lo verán en muchos lugares. 
+   * * Ahora cuando queramos utilizar el BehaviorSubject, no lo haremos llamándolo directamente, 
+   * * si no que, a través de este observable.
+   */
   private currentPageSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   currentPage$: Observable<number> = this.currentPageSubject.asObservable();
 
